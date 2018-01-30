@@ -1,2 +1,2 @@
 # zUtil
-some function gathing
+some function gathering
