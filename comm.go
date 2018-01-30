@@ -192,16 +192,14 @@ func FetchWithArray(sqlCmd string, valstr string, db *sql.DB) (string, []interfa
 }
 
 // 随机字符串的类型
-type RandomType int
-// 随机字符串的类型
 const (
-    RandomStringNumberOnly RandomType = iota    // 只有数字
+    RandomStringNumberOnly int = iota    // 只有数字
     RandomStringLowerOnly                       // 只有小写字母
     RandomStringUpperOnly                       // 只有大写字母
     RandomStringAll                             // 大小写字母+数字
 )
 // 产生随机字符串
-func GenerateRandomString(size int, kind int) []byte {
+func RandomString(size int, kind int) []byte {
     ikind, kinds, result := kind, [][]int{[]int{10, 48}, []int{26, 97}, []int{26, 65}}, make([]byte, size)
     is_all := kind > 2 || kind < 0
     rand.Seed(time.Now().UnixNano())
