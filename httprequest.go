@@ -47,7 +47,7 @@ func NewReqParam() *ReqParam {
 }
 
 // 发送get请求(非client模式 不带cookie)
-func (r *ReqParam)sendGetRequest() ([]byte, error) {
+func (r *ReqParam)SendGetRequest() ([]byte, error) {
     var data []byte
     var err error
     // 完整的请求地址
@@ -62,7 +62,7 @@ func (r *ReqParam)sendGetRequest() ([]byte, error) {
 }
 
 // 发送post请求(非client模式 不带cookie)
-func (r *ReqParam)sendPostRequest() ([]byte, error) {
+func (r *ReqParam)SendPostRequest() ([]byte, error) {
     var data []byte
     var err error
     // 完整的请求地址
