@@ -42,6 +42,7 @@ func NewReqParam() *ReqParam {
         Body        : make(url.Values),
         Body2       : "",
         Cookies     : make([]*http.Cookie, 0),
+        ContentType : ContentTypeUrlencoded,
         Method      : "",
     }
 }
