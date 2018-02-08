@@ -34,13 +34,16 @@ type ReqParam struct {
 }
 
 // 新建请求结构体
-func NewReqParam() *ReqParam {
-    // 初始化结构体
-    param := new(ReqParam)
-    // 初始化结构体内的map
-    param.Param = make(url.Values)
-    param.Body = make(url.Values)
-    return param
+func newReqParam() *ReqParam {
+    return &ReqParam{
+        Addr        : "",
+        Fulladdr    : "",
+        Param       : make(url.Values),
+        Body        : make(url.Values),
+        Body2       : "",
+        Cookies     : make([]*http.Cookie, 0),
+        Method      : "",
+    }
 }
 
 // 发送get请求(非client模式 不带cookie)

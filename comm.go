@@ -4,10 +4,13 @@ package zUtil
 import (
     "bytes"
     "crypto/md5"
+    crand "crypto/rand"
     "database/sql"
+    "encoding/base64"
     "encoding/hex"
     "encoding/json"
     "encoding/xml"
+    "io"
     "log"
     "math/rand"
     "net/http"
@@ -37,6 +40,15 @@ func GetMd5String(s string) string {
     h := md5.New()
     h.Write([]byte(s))
     return hex.EncodeToString(h.Sum(nil))
+}
+
+// 获取随机文件名
+func GetRandomFilename() string {
+    b := make([]byte, 48)
+    if _, err := io.ReadFull(crand.Reader, b); err != nil {
+        panic("创建文件名出错")
+    }
+    return time.Now().Format("20060102150405") + GetMd5String(base64.URLEncoding.EncodeToString(b))
 }
 
 // 获取GET的参数
