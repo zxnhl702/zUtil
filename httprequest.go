@@ -34,7 +34,7 @@ type ReqParam struct {
 }
 
 // 新建请求结构体
-func newReqParam() *ReqParam {
+func NewReqParam() *ReqParam {
     return &ReqParam{
         Addr        : "",
         Fulladdr    : "",
