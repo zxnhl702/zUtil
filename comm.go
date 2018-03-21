@@ -143,66 +143,6 @@ func Uridecode(s string ) (string, error) {
     return url.QueryUnescape(s)
 }
 
-// 执行select语句并返回数据
-func Fetch(sqlCmd string, valstr string, db *sql.DB) (string, interface{}) {
-    vals := make([]interface{}, 20)
-    json.Unmarshal([]byte(valstr), &vals)
-
-    rows, err := db.Query(sqlCmd, vals...)
-    Perror(err, "无法执行sql")
-    columns, err := rows.Columns()
-    Perror(err, "无法获取列信息")
-    sqlLen := len(columns)
-
-    var ret []interface{}
-    for rows.Next() {
-        vals := make([]sql.RawBytes, sqlLen)
-        scanArgs := make([]interface{}, len(vals))
-        for i := range vals {
-            scanArgs[i] = &vals[i]
-        }
-        rows.Scan(scanArgs...)
-
-        s_vals := make(map[string]string, 0)
-        for i, col := range vals {
-            s_vals[columns[i]] = string(col)
-        }
-        ret = append(ret, s_vals)
-    }
-
-    return "sql执行成功", ret
-}
-
-// 执行select语句并返回数据数组
-func FetchWithArray(sqlCmd string, valstr string, db *sql.DB) (string, []interface{}) {
-    vals := make([]interface{}, 20)
-    json.Unmarshal([]byte(valstr), &vals)
-
-    rows, err := db.Query(sqlCmd, vals...)
-    Perror(err, "无法执行sql")
-    columns, err := rows.Columns()
-    Perror(err, "无法获取列信息")
-    sqlLen := len(columns)
-
-    var ret []interface{}
-    for rows.Next() {
-        vals := make([]sql.RawBytes, sqlLen)
-        scanArgs := make([]interface{}, len(vals))
-        for i := range vals {
-            scanArgs[i] = &vals[i]
-        }
-        rows.Scan(scanArgs...)
-
-        s_vals := make(map[string]string, 0)
-        for i, col := range vals {
-            s_vals[columns[i]] = string(col)
-        }
-        ret = append(ret, s_vals)
-    }
-
-    return "sql执行成功", ret
-}
-
 // 随机字符串的类型
 const (
     RandomStringNumberOnly int = iota    // 只有数字
