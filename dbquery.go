@@ -1,3 +1,4 @@
+// 数据库检索函数
 package zUtil
 
 import (
