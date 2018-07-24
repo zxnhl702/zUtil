@@ -52,7 +52,7 @@ func InterfaceToString(value interface{}) string {
 func InterfaceToInt(value interface{}) int {
     switch v := value.(type) {
     case string:
-        log.Println("string", v)
+        // log.Println("string", v)
         tmp, err := strconv.Atoi(v)
         if nil != err {
             return -99998
@@ -60,13 +60,13 @@ func InterfaceToInt(value interface{}) int {
             return tmp
         }
     case int:
-        log.Println("int", v)
+        // log.Println("int", v)
         return v
     case float32:
-        log.Println("float32", v)
+        // log.Println("float32", v)
         return int(v)
     case float64:
-        log.Println("float64", v)
+        // log.Println("float64", v)
         return int(v)
     case bool:
         if v {
@@ -75,7 +75,7 @@ func InterfaceToInt(value interface{}) int {
             return 0
         }
     default:
-        log.Println("default")
+        // log.Println("default")
         return -99999
     }
 }
@@ -84,7 +84,7 @@ func InterfaceToInt(value interface{}) int {
 func InterfaceToFloat64(value interface{}) float64 {
     switch v := value.(type) {
     case string:
-        log.Println("string", v)
+        // log.Println("string", v)
         tmp, err := strconv.ParseFloat(v, 64)
         if nil != err {
             return -99998.0
@@ -92,13 +92,13 @@ func InterfaceToFloat64(value interface{}) float64 {
             return tmp
         }
     case int:
-        log.Println("int", v)
+        // log.Println("int", v)
         return float64(v)
     case float32:
-        log.Println("float32", v)
+        // log.Println("float32", v)
         return float64(v)
     case float64:
-        log.Println("float64", v)
+        // log.Println("float64", v)
         return v
     case bool:
         if v {
@@ -107,7 +107,7 @@ func InterfaceToFloat64(value interface{}) float64 {
             return 0
         }
     default:
-        log.Println("default")
+        // log.Println("default")
         return -99999
     }
 }
