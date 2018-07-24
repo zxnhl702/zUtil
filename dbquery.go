@@ -5,7 +5,7 @@ import (
     "database/sql"
     "encoding/json"
     "log"
-    "reflect"
+    // "reflect"
     "strings"
     "strconv"
     "time"
@@ -59,31 +59,31 @@ func GetMultyRowsData(sqls string, db *sql.DB) ([]*map[string]interface{}, error
         rowData := make(map[string]interface{})
         // 循环取出来的每一列数据 根据不同的数据类型进行转换 然后存入map中
         for i, v := range container {
-            log.Println(i, reflect.TypeOf(v).Name(), reflect.TypeOf(v).Kind().String())
+            // log.Println(i, reflect.TypeOf(v).Name(), reflect.TypeOf(v).Kind().String())
             // 处理列名 确定map中的key
             col := getColumnName(i, columns[i])
             // 根据每个字段数据类型的不同 转换成string
             switch vv := v.(type) {
             case int64:
                 // 整型 直接放到map中
-                log.Println("int64",  columns[i], col, vv)
+                // log.Println("int64",  columns[i], col, vv)
                 rowData[col] = vv
             case float64:
                 // 浮点型 直接放到map中
-                log.Println("float64",  columns[i], col, vv)
+                // log.Println("float64",  columns[i], col, vv)
                 rowData[col] = vv
             case bool:
                 // 布尔型 直接放到map中
-                log.Println("float64",  columns[i], col, vv)
+                // log.Println("float64",  columns[i], col, vv)
                 rowData[col] = vv
             case time.Time:
                 // 时间类型 转换成string 放到map中
-                log.Println("time", columns[i], col, vv.Format("2006-01-02 15:04:05"))
+                // log.Println("time", columns[i], col, vv.Format("2006-01-02 15:04:05"))
                 rowData[col] = vv.Format("2006-01-02 15:04:05")
             default:
                 // 默认 先断言[]byte然后转换成string 放倒map中
                 vvv, _ :=  v.([]byte)
-                log.Println("default",  columns[i], col, string(vvv))
+                // log.Println("default",  columns[i], col, string(vvv))
                 rowData[col] = string(vvv)
             }
         }
@@ -134,31 +134,31 @@ func GetMultyRowsDataWithWhere(sqlCmd string, valstr string, db *sql.DB) ([]*map
         rowData := make(map[string]interface{})
         // 循环取出来的每一列数据 根据不同的数据类型进行转换 然后存入map中
         for i, v := range container {
-            log.Println(i, reflect.TypeOf(v).Name(), reflect.TypeOf(v).Kind().String())
+            // log.Println(i, reflect.TypeOf(v).Name(), reflect.TypeOf(v).Kind().String())
             // 处理列名 确定map中的key
             col := getColumnName(i, columns[i])
             // 根据每个字段数据类型的不同 转换成string
             switch vv := v.(type) {
             case int64:
                 // 整型 直接放到map中
-                log.Println("int64",  columns[i], col, vv)
+                // log.Println("int64",  columns[i], col, vv)
                 rowData[col] = vv
             case float64:
                 // 浮点型 直接放到map中
-                log.Println("float64",  columns[i], col, vv)
+                // log.Println("float64",  columns[i], col, vv)
                 rowData[col] = vv
             case bool:
                 // 布尔型 直接放到map中
-                log.Println("float64",  columns[i], col, vv)
+                // log.Println("float64",  columns[i], col, vv)
                 rowData[col] = vv
             case time.Time:
                 // 时间类型 转换成string 放到map中
-                log.Println("time", columns[i], col, vv.Format("2006-01-02 15:04:05"))
+                // log.Println("time", columns[i], col, vv.Format("2006-01-02 15:04:05"))
                 rowData[col] = vv.Format("2006-01-02 15:04:05")
             default:
                 // 默认 先断言[]byte然后转换成string 放倒map中
                 vvv, _ :=  v.([]byte)
-                log.Println("default",  columns[i], col, string(vvv))
+                // log.Println("default",  columns[i], col, string(vvv))
                 rowData[col] = string(vvv)
             }
         }
