@@ -186,6 +186,29 @@ func ExecSql(sqls string, db *sql.DB) (int64, error) {
     return rowid, err
 }
 
+// 执行sql insert update delete 带where条件
+func ExecSqlWithWhere(sqls, valstr string, db *sql.DB) (int64, error) {
+    // sql where 条件
+    vals := make([]interface{}, 20)
+    json.Unmarshal([]byte(valstr), &vals)
+
+    var rowid int64
+    var err error
+    result, err := db.Exec(sqls, vals...)
+    if nil != err {
+        log.Println(err)
+        return rowid, err
+    }
+    if strings.Index(sqls, "insert") >= 0 {
+        // insert
+        rowid, err = result.LastInsertId()
+    } else { 
+        // update or detete
+        rowid, err = result.RowsAffected()
+    }
+    return rowid, err
+}
+
 // 处理列名
 func getColumnName(index int, colname string) string {
     if strings.Index(colname, "(") == -1 {
