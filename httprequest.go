@@ -96,7 +96,7 @@ func (r *ReqParam)SendPostRequest() ([]byte, error) {
 }
 
 // 发送post请求(https 不验证服务器端证书 client模式 不带cookie)
-func (r *ReqParam)SendHttpsPostSkipVerify() ([]byte, error) {
+func (r *ReqParam)SendHttpsPostRequestSkipVerify() ([]byte, error) {
     var data []byte
     var err error
     // 完整的请求地址
