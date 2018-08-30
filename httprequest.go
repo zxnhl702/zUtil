@@ -2,6 +2,7 @@
 package zUtil
 
 import (
+    "crypto/tls"
     "io/ioutil"
     "log"
     "net/http"
@@ -62,6 +63,21 @@ func (r *ReqParam)SendGetRequest() ([]byte, error) {
     return data, err
 }
 
+// 发送get请求(https 不验证服务器端证书 client模式 不带cookie)
+func (r *ReqParam)SendHttpsGetRequestSkipVerify() ([]byte, error) {
+    var data []byte
+    var err error
+    // 完整的请求地址
+    r.Fulladdr, err = GetFullUrl(r.Addr, r.Param)
+    if nil != err {
+        log.Println(err)
+        return data, err
+    }
+    // 发送请求
+    data, err = doSendGetHttpsSkipVerify(r.Fulladdr)
+    return data, err
+}
+
 // 发送post请求(非client模式 不带cookie)
 func (r *ReqParam)SendPostRequest() ([]byte, error) {
     var data []byte
@@ -76,6 +92,23 @@ func (r *ReqParam)SendPostRequest() ([]byte, error) {
     r.setRequestBody2()
     // 发送请求
     data, err = doSendPost(r.Body2, r.ContentType, r.Fulladdr)
+    return data, err
+}
+
+// 发送post请求(https 不验证服务器端证书 client模式 不带cookie)
+func (r *ReqParam)SendHttpsPostSkipVerify() ([]byte, error) {
+    var data []byte
+    var err error
+    // 完整的请求地址
+    r.Fulladdr, err = GetFullUrl(r.Addr, r.Param)
+    if nil != err {
+        log.Println(err)
+        return data, err
+    }
+    // 拼请求body参数
+    r.setRequestBody2()
+    // 发送请求
+    data, err = doSendPostHttpsSkipVerify(r.Body2, r.ContentType, r.Fulladdr)
     return data, err
 }
 
@@ -113,11 +146,62 @@ func doSendGet(apiurl string) ([]byte, error) {
     return rtn, nil
 }
 
+// 发送get请求https地址 不验证服务器端程序 
+// apiurl 完整的请求地址
+func doSendGetHttpsSkipVerify(apiurl string) ([]byte, error) {
+    var rtn []byte
+    // 指定不验证服务器端证书
+    tr := &http.Transport{
+        TLSClientConfig : &tls.Config{InsecureSkipVerify: true},
+    }
+    client := &http.Client{Transport: tr}
+    // 发送get请求
+    resp, err := client.Get(apiurl)
+    if nil != err {
+        log.Println("请求失败")
+        return rtn, err
+    }
+    defer resp.Body.Close()
+    // 读取返回数据
+    rtn, err = ioutil.ReadAll(resp.Body)
+    if nil != err {
+        log.Println("返回数据读取失败")
+        return rtn, err
+    }
+    return rtn, nil
+}
+
 // 发送post请求 p post请求body中的参数  apiurl 完整的请求地址
 func doSendPost(p, contentType, apiurl string) ([]byte, error) {
     var rtn []byte
     // 发送post请求
     resp, err := http.Post(apiurl, contentType, strings.NewReader(p))
+    if nil != err {
+        log.Println("发送请求失败")
+        return rtn, err
+    }
+    defer resp.Body.Close()
+    // 读取返回参数
+    rtn, err = ioutil.ReadAll(resp.Body)
+    defer resp.Body.Close()
+    if nil != err {
+        log.Println("返回数据读取失败")
+        return rtn, err
+    }
+    return rtn, nil
+}
+
+// 发送post请求https地址 不验证服务器端程序 
+// p post请求body中的参数  apiurl 完整的请求地址
+func doSendPostHttpsSkipVerify(p, contentType, apiurl string) ([]byte, error) {
+    var rtn []byte
+    // 指定不验证服务器端证书
+    tr := &http.Transport{
+        TLSClientConfig : &tls.Config{InsecureSkipVerify: true},
+    }
+    client := &http.Client{Transport: tr}
+    // 发送请求
+    resp, err := client.Post(apiurl, contentType, strings.NewReader(p))
     if nil != err {
         log.Println("发送请求失败")
         return rtn, err
