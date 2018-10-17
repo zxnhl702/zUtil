@@ -30,7 +30,7 @@ type Files struct {
     Key         string          // mutipart/form-data 中的name
     Filename    string          // mutipart/form-data 中的filename
     Filepath    string          // 文件的绝对路径 用于读取文件内容
-    data        *os.File        // 文件内容
+    Data        *os.File        // 文件内容
 }
 
 // 新建请求结构体
@@ -53,7 +53,7 @@ func (m *MutiPartParam) readAllFile() error {
     // 遍历全部文件
     for _, f := range m.FileData {
         // 读取文件
-        f.data, err = os.Open(f.Filepath)
+        f.Data, err = os.Open(f.Filepath)
         if nil != err {
             log.Println("读取文件失败")
             log.Println(err)
@@ -78,7 +78,7 @@ func  (m *MutiPartParam) setRequestData() error {
             return err
         }
         // 文件数据复制到formfile中
-        io.Copy(part, f.data)
+        io.Copy(part, f.Data)
     }
     // 设置普通参数到body中
     for k, v := range m.FormData {
