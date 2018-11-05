@@ -32,6 +32,7 @@ type ReqParam struct {
     Cookies     []*http.Cookie  // cookie
     ContentType string          // contenttype
     Method      string          // 请求方法get/post
+    Header      http.Header     // 请求头
 }
 
 // 新建请求结构体
@@ -45,6 +46,7 @@ func NewReqParam() *ReqParam {
         Cookies     : make([]*http.Cookie, 0),
         ContentType : ContentTypeUrlencoded,
         Method      : "",
+        Header      : make(http.Header),
     }
 }
 
@@ -59,7 +61,7 @@ func (r *ReqParam)SendGetRequest() ([]byte, error) {
         return data, err
     }
     // 发送请求
-    data, err = doSendGet(r.Fulladdr)
+    data, err = doSendGet2(r.Fulladdr, r.Header)
     return data, err
 }
 
@@ -91,7 +93,7 @@ func (r *ReqParam)SendPostRequest() ([]byte, error) {
     // 拼请求body参数
     r.setRequestBody2()
     // 发送请求
-    data, err = doSendPost(r.Body2, r.ContentType, r.Fulladdr)
+    data, err = doSendPost2(r.Body2, r.ContentType, r.Fulladdr, r.Header)
     return data, err
 }
 
@@ -146,6 +148,40 @@ func doSendGet(apiurl string) ([]byte, error) {
     return rtn, nil
 }
 
+// 发送post请求 p post请求body中的参数  apiurl 完整的请求地址 带自定义请求头
+func doSendGet2(apiurl string, header http.Header) ([]byte, error) {
+    var rtn []byte
+    // 生成请求
+    client := &http.Client{}
+    req, err := http.NewRequest("GET", apiurl, nil)
+    if nil != err {
+        log.Println("生成请求失败")
+        return rtn, err
+    }
+    // 设置请求头
+    // 自定义的请求头
+    for k, v := range header {
+        for _, vv := range v {
+            req.Header.Set(k, vv)
+        }
+    }
+    // 发送post请求
+    resp, err := client.Do(req)
+    if nil != err {
+        log.Println("发送请求失败")
+        return rtn, err
+    }
+    defer resp.Body.Close()
+    // 读取返回参数
+    rtn, err = ioutil.ReadAll(resp.Body)
+    defer resp.Body.Close()
+    if nil != err {
+        log.Println("返回数据读取失败")
+        return rtn, err
+    }
+    return rtn, nil
+}
+
 // 发送get请求https地址 不验证服务器端程序 
 // apiurl 完整的请求地址
 func doSendGetHttpsSkipVerify(apiurl string) ([]byte, error) {
@@ -176,6 +212,41 @@ func doSendPost(p, contentType, apiurl string) ([]byte, error) {
     var rtn []byte
     // 发送post请求
     resp, err := http.Post(apiurl, contentType, strings.NewReader(p))
+    if nil != err {
+        log.Println("发送请求失败")
+        return rtn, err
+    }
+    defer resp.Body.Close()
+    // 读取返回参数
+    rtn, err = ioutil.ReadAll(resp.Body)
+    defer resp.Body.Close()
+    if nil != err {
+        log.Println("返回数据读取失败")
+        return rtn, err
+    }
+    return rtn, nil
+}
+
+// 发送post请求 p post请求body中的参数  apiurl 完整的请求地址 带自定义请求头
+func doSendPost2(p, contentType, apiurl string, header http.Header) ([]byte, error) {
+    var rtn []byte
+    // 生成请求
+    client := &http.Client{}
+    req, err := http.NewRequest("POST", apiurl, strings.NewReader(p))
+    if nil != err {
+        log.Println("生成请求失败")
+        return rtn, err
+    }
+    // 设置请求头
+    req.Header.Set("Content-Type", contentType)
+    // 自定义的请求头
+    for k, v := range header {
+        for _, vv := range v {
+            req.Header.Set(k, vv)
+        }
+    }
+    // 发送post请求
+    resp, err := client.Do(req)
     if nil != err {
         log.Println("发送请求失败")
         return rtn, err
