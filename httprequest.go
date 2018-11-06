@@ -151,8 +151,12 @@ func doSendGet(apiurl string) ([]byte, error) {
 // 发送post请求 p post请求body中的参数  apiurl 完整的请求地址 带自定义请求头
 func doSendGet2(apiurl string, header http.Header) ([]byte, error) {
     var rtn []byte
+    // 指定不验证服务器端证书 生成客户端
+    tr := &http.Transport{
+        TLSClientConfig : &tls.Config{InsecureSkipVerify: true},
+    }
+    client := &http.Client{Transport: tr}
     // 生成请求
-    client := &http.Client{}
     req, err := http.NewRequest("GET", apiurl, nil)
     if nil != err {
         log.Println("生成请求失败")
@@ -230,8 +234,12 @@ func doSendPost(p, contentType, apiurl string) ([]byte, error) {
 // 发送post请求 p post请求body中的参数  apiurl 完整的请求地址 带自定义请求头
 func doSendPost2(p, contentType, apiurl string, header http.Header) ([]byte, error) {
     var rtn []byte
+    // 指定不验证服务器端证书 生成客户端
+    tr := &http.Transport{
+        TLSClientConfig : &tls.Config{InsecureSkipVerify: true},
+    }
+    client := &http.Client{Transport: tr}
     // 生成请求
-    client := &http.Client{}
     req, err := http.NewRequest("POST", apiurl, strings.NewReader(p))
     if nil != err {
         log.Println("生成请求失败")
@@ -301,26 +309,6 @@ func GetFullUrl(addr string, params url.Values) (string, error) {
     if nil != params && len(params) > 0 {
         for k, v := range params {
             q.Add(k, v[0])
-        }
-    }
-    // 参数拼到链接地址上
-    u.RawQuery = q.Encode()
-    return u.String(), nil
-}
-
-// 生成带参数的完整链接
-func GetFullUrl2(addr string, params map[string]string) (string, error) {
-    // 解析链接地址
-    u, err := url.Parse(addr)
-    if nil != err {
-        log.Printf("getFullUrl 解析链接失败 链接：%s", addr)
-        return "", err
-    }
-    // 添加参数
-    q := u.Query()
-    if nil != params && len(params) > 0 {
-        for k, v := range params {
-            q.Add(k, v)
         }
     }
     // 参数拼到链接地址上
