@@ -87,7 +87,11 @@ func  (m *MutiPartParam) setRequestData() error {
         }
     }
     // 设置content type
-    m.ContentType = writer.FormDataContentType() + "; " + m.ContentType
+    if "" != m.ContentType {
+        m.ContentType = writer.FormDataContentType() + "; " + m.ContentType
+    } else {
+        m.ContentType = writer.FormDataContentType()
+    }
     // 给body增加eof
     err := writer.Close()
     if nil != err {
