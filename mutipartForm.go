@@ -40,7 +40,7 @@ func NewMutiPartParam() *MutiPartParam {
         Fulladdr    : "",
         Param       : make(url.Values),
         Cookies     : make([]*http.Cookie, 0),
-        ContentType : ContentTypeFormdata,
+        ContentType : "",
         body        : new(bytes.Buffer),
         FileData    : make([]*Files, 0),
         FormData    : make(url.Values),
@@ -87,7 +87,7 @@ func  (m *MutiPartParam) setRequestData() error {
         }
     }
     // 设置content type
-    m.ContentType = writer.FormDataContentType()
+    m.ContentType = writer.FormDataContentType() + "; " + m.ContentType
     // 给body增加eof
     err := writer.Close()
     if nil != err {
