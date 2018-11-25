@@ -1,4 +1,4 @@
-// 发送mutipart/form-data格式请求和数据结构
+// Package zUtil 发送mutipart/form-data格式请求和数据结构
 package zUtil
 
 import (
@@ -13,7 +13,7 @@ import (
     "os"
 )
 
-// mutipart/form-data请求结构体
+// MutiPartParam mutipart/form-data请求结构体
 type MutiPartParam struct {
     Addr        string          // 请求地址
     Fulladdr    string          // 完整请求地址
@@ -25,7 +25,7 @@ type MutiPartParam struct {
     FormData    url.Values      // mutipart/form-data中其他需要添加的请求数据
 }
 
-// 通过mutipart/form-data上传的文件
+// Files 通过mutipart/form-data上传的文件
 type Files struct {
     Key         string          // mutipart/form-data 中的name
     Filename    string          // mutipart/form-data 中的filename
@@ -33,7 +33,7 @@ type Files struct {
     Data        *os.File        // 文件内容
 }
 
-// 新建请求结构体
+// NewMutiPartParam 新建请求结构体
 func NewMutiPartParam() *MutiPartParam {
     return &MutiPartParam {
         Addr        : "",
@@ -103,12 +103,12 @@ func  (m *MutiPartParam) setRequestData() error {
     return nil
 }
 
-// 发送请求
+// Send 发送请求
 func (m *MutiPartParam) Send(ishttps bool) ([]byte, error) {
     var data []byte
     var err error
     // 完整的请求地址
-    m.Fulladdr, err = GetFullUrl(m.Addr, m.Param)
+    m.Fulladdr, err = GetFullURL(m.Addr, m.Param)
     if nil != err {
         log.Println(err)
         return data, err
@@ -131,7 +131,7 @@ func (m *MutiPartParam) Send(ishttps bool) ([]byte, error) {
     if !ishttps {
         data, err = m.doSendPost()
     } else {
-        data, err = m.doSendPostHttpsSkipVerify()
+        data, err = m.doSendPostHTTPSSkipVerify()
     }
     return data, err
 }
@@ -159,7 +159,7 @@ func (m *MutiPartParam) doSendPost() ([]byte, error) {
 
 // 发送post请求https地址 不验证服务器端程序 
 // apiurl 完整的请求地址
-func (m *MutiPartParam) doSendPostHttpsSkipVerify() ([]byte, error) {
+func (m *MutiPartParam) doSendPostHTTPSSkipVerify() ([]byte, error) {
     var data []byte
     var err error
     // 指定不验证服务器端证书

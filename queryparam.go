@@ -1,4 +1,4 @@
-// 接受数据的泛型结构以及数据类型转换
+// Package zUtil 接受数据的泛型结构以及数据类型转换
 package zUtil
 
 import (
@@ -6,7 +6,7 @@ import (
     "strconv"
 )
 
-// 查询参数
+// QueryParam 查询参数
 type QueryParam map[string]interface{}
 
 // 请求参数转换成字符串
@@ -29,7 +29,7 @@ func (q QueryParam)toStringArray(key string) []string {
     return InterfaceToStringArray(q[key])
 }
 
-// 将泛型转换成字符串
+// InterfaceToString 将泛型转换成字符串
 func InterfaceToString(value interface{}) string {
     // 断言各种类型 进行格式转换成string
     switch v := value.(type) {
@@ -48,7 +48,7 @@ func InterfaceToString(value interface{}) string {
     }
 }
 
-// 将泛型转换成整型 转换失败输出-99999
+// InterfaceToInt 将泛型转换成整型 转换失败输出-99999
 func InterfaceToInt(value interface{}) int {
     switch v := value.(type) {
     case string:
@@ -56,9 +56,8 @@ func InterfaceToInt(value interface{}) int {
         tmp, err := strconv.Atoi(v)
         if nil != err {
             return -99998
-        } else {
-            return tmp
         }
+        return tmp
     case int:
         // log.Println("int", v)
         return v
@@ -71,16 +70,15 @@ func InterfaceToInt(value interface{}) int {
     case bool:
         if v {
             return 1
-        } else {
-            return 0
         }
+        return 0
     default:
         // log.Println("default")
         return -99999
     }
 }
 
-// 将泛型转换成浮点型float64 转换失败输出-99999
+// InterfaceToFloat64 将泛型转换成浮点型float64 转换失败输出-99999
 func InterfaceToFloat64(value interface{}) float64 {
     switch v := value.(type) {
     case string:
@@ -88,9 +86,8 @@ func InterfaceToFloat64(value interface{}) float64 {
         tmp, err := strconv.ParseFloat(v, 64)
         if nil != err {
             return -99998.0
-        } else {
-            return tmp
         }
+        return tmp
     case int:
         // log.Println("int", v)
         return float64(v)
@@ -103,16 +100,15 @@ func InterfaceToFloat64(value interface{}) float64 {
     case bool:
         if v {
             return 1
-        } else {
-            return 0
         }
+        return 0
     default:
         // log.Println("default")
         return -99999
     }
 }
 
-// 泛型转换成字符串数组
+// InterfaceToStringArray 泛型转换成字符串数组
 func InterfaceToStringArray(value interface{}) []string {
     var arr []string
     switch v := value.(type) {

@@ -1,4 +1,4 @@
-// 微信支付签名
+// Package zUtil 微信支付签名
 package zUtil
 
 import (
@@ -10,7 +10,7 @@ import (
     "log"
 )
 
-// map形式的请求参数
+// Params map形式的请求参数
 type Params map[string]string
 
 // 结构体转换成map
@@ -55,7 +55,7 @@ func tagWithOmitempty(keys []string) bool {
     return false
 }
 
-// 计算签名
+// GetMD5Sign 计算签名
 func (param Params)GetMD5Sign(paykey string) string {
     // 获取算法所需的stringA
     stringA := param.SortAndConcat()
@@ -68,7 +68,7 @@ func (param Params)GetMD5Sign(paykey string) string {
     return strings.ToUpper(hex.EncodeToString(md5Ctx.Sum(nil)))
 }
 
-// 计算签名 不带微信商家的peykey
+// GetMD5SignWithoutPaykey 计算签名 不带微信商家的peykey
 func (param Params)GetMD5SignWithoutPaykey() string {
     // 获取算法所需的stringA
     stringA := param.SortAndConcat()
@@ -78,7 +78,7 @@ func (param Params)GetMD5SignWithoutPaykey() string {
     return strings.ToUpper(hex.EncodeToString(md5Ctx.Sum(nil)))
 }
 
-// 按字母顺序排序参数并拼接为key1=value1&key2&value2的形式
+// SortAndConcat 按字母顺序排序参数并拼接为key1=value1&key2&value2的形式
 func (param Params)SortAndConcat() string {
     // 获取全部参数名称
     var keys []string

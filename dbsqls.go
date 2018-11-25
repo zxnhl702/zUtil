@@ -1,4 +1,4 @@
-// sql生成函数
+// Package zUtil sql生成函数
 package zUtil
 
 import (
@@ -18,8 +18,8 @@ func (q QueryParam)toPongoContext() *pongo2.Context {
     return &p2
 }
 
-// 根据模板生成动态sql并去掉多余空格和换行
-func GetDynamicSql(p *pongo2.Context, sqltpl ...string) ([]string, error) {
+// GetDynamicSQL 根据模板生成动态sql并去掉多余空格和换行
+func GetDynamicSQL(p *pongo2.Context, sqltpl ...string) ([]string, error) {
     var sqls []string
     // 多余空格和换行的正则表达式
     exp1 := regexp.MustCompile(`\s{2,}|\n`)

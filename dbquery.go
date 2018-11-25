@@ -1,4 +1,4 @@
-// 数据库检索函数
+// Package zUtil 数据库检索函数
 package zUtil
 
 import (
@@ -11,7 +11,7 @@ import (
     "time"
 )
 
-// 获取单行数据
+//GetSingleRowData  获取单行数据
 func GetSingleRowData(sqls string, db *sql.DB) (*map[string]interface{}, error) {
     // 调用获取多行数据的函数
     list, err := GetMultyRowsData(sqls, db)
@@ -22,12 +22,11 @@ func GetSingleRowData(sqls string, db *sql.DB) (*map[string]interface{}, error) 
     // 获取的数据超过1行报错 否则返回获取的数据
     if len(list) > 1 {
         return nil, sql.ErrNoRows
-    } else {
-        return list[0], nil
     }
+    return list[0], nil
 }
 
-// 获取多行数据
+// GetMultyRowsData 获取多行数据
 func GetMultyRowsData(sqls string, db *sql.DB) ([]*map[string]interface{}, error) {
     // 返回数据
     list := make([]*map[string]interface{}, 0)
@@ -92,7 +91,7 @@ func GetMultyRowsData(sqls string, db *sql.DB) ([]*map[string]interface{}, error
     return list, nil
 }
 
-// 获取多行数据 带where条件
+// GetMultyRowsDataWithWhere 获取多行数据 带where条件
 func GetMultyRowsDataWithWhere(sqlCmd string, valstr string, db *sql.DB) ([]*map[string]interface{}, error) {
     // sql where 条件
     vals := make([]interface{}, 20)
@@ -167,8 +166,8 @@ func GetMultyRowsDataWithWhere(sqlCmd string, valstr string, db *sql.DB) ([]*map
     return list, nil
 }
 
-// 执行sql insert update delete
-func ExecSql(sqls string, db *sql.DB) (int64, error) {
+// ExecSQL 执行sql insert update delete
+func ExecSQL(sqls string, db *sql.DB) (int64, error) {
     var rowid int64
     var err error
     result, err := db.Exec(sqls)
@@ -186,8 +185,8 @@ func ExecSql(sqls string, db *sql.DB) (int64, error) {
     return rowid, err
 }
 
-// 执行sql insert update delete 带where条件
-func ExecSqlWithWhere(sqls, valstr string, db *sql.DB) (int64, error) {
+// ExecSQLWithWhere 执行sql insert update delete 带where条件
+func ExecSQLWithWhere(sqls, valstr string, db *sql.DB) (int64, error) {
     // sql where 条件
     vals := make([]interface{}, 20)
     json.Unmarshal([]byte(valstr), &vals)
@@ -213,12 +212,11 @@ func ExecSqlWithWhere(sqls, valstr string, db *sql.DB) (int64, error) {
 func getColumnName(index int, colname string) string {
     if strings.Index(colname, "(") == -1 {
         return colname
-    } else {
-        return "col" + strconv.Itoa(index+1)
     }
+    return "col" + strconv.Itoa(index+1)
 }
 
-// 执行select语句并返回数据
+// Fetch 执行select语句并返回数据
 func Fetch(sqlCmd string, valstr string, db *sql.DB) (string, interface{}) {
     vals := make([]interface{}, 20)
     json.Unmarshal([]byte(valstr), &vals)
@@ -238,17 +236,17 @@ func Fetch(sqlCmd string, valstr string, db *sql.DB) (string, interface{}) {
         }
         rows.Scan(scanArgs...)
 
-        s_vals := make(map[string]string, 0)
+        sVals := make(map[string]string, 0)
         for i, col := range vals {
-            s_vals[columns[i]] = string(col)
+            sVals[columns[i]] = string(col)
         }
-        ret = append(ret, s_vals)
+        ret = append(ret, sVals)
     }
 
     return "sql执行成功", ret
 }
 
-// 执行select语句并返回数据数组
+// FetchWithArray 执行select语句并返回数据数组
 func FetchWithArray(sqlCmd string, valstr string, db *sql.DB) (string, []interface{}) {
     vals := make([]interface{}, 20)
     json.Unmarshal([]byte(valstr), &vals)
@@ -268,16 +266,17 @@ func FetchWithArray(sqlCmd string, valstr string, db *sql.DB) (string, []interfa
         }
         rows.Scan(scanArgs...)
 
-        s_vals := make(map[string]string, 0)
+        sVals := make(map[string]string, 0)
         for i, col := range vals {
-            s_vals[columns[i]] = string(col)
+            sVals[columns[i]] = string(col)
         }
-        ret = append(ret, s_vals)
+        ret = append(ret, sVals)
     }
 
     return "sql执行成功", ret
 }
 
+// Exec 执行insert update delete sql
 func Exec(sqlCmd string, db *sql.DB) (string, interface{}) {
     res, err := db.Exec(sqlCmd)
     Perror(err, "无法执行写操作")

@@ -1,4 +1,4 @@
-// 发送请求的函数以及数据结构
+// Package zUtil 发送请求的函数以及数据结构
 package zUtil
 
 import (
@@ -17,12 +17,12 @@ const (
     // multipart/form-data
     ContentTypeFormdata = "multipart/form-data"
     // application/json
-    ContentTypeJson = "application/json;charset=utf-8"
+    ContentTypeJSON = "application/json;charset=utf-8"
     // text/xml
     ContentTypeXML = "text/xml;charset=utf-8"
 )
 
-// 请求结构体
+// ReqParam 请求结构体
 type ReqParam struct {
     Addr        string          // 请求地址
     Fulladdr    string          // 完整请求地址
@@ -35,7 +35,7 @@ type ReqParam struct {
     Header      http.Header     // 请求头
 }
 
-// 新建请求结构体
+// NewReqParam 新建请求结构体
 func NewReqParam() *ReqParam {
     return &ReqParam{
         Addr        : "",
@@ -50,12 +50,12 @@ func NewReqParam() *ReqParam {
     }
 }
 
-// 发送get请求(非client模式 不带cookie)
+// SendGetRequest 发送get请求(非client模式 不带cookie)
 func (r *ReqParam)SendGetRequest() ([]byte, error) {
     var data []byte
     var err error
     // 完整的请求地址
-    r.Fulladdr, err = GetFullUrl(r.Addr, r.Param)
+    r.Fulladdr, err = GetFullURL(r.Addr, r.Param)
     if nil != err {
         log.Println(err)
         return data, err
@@ -65,27 +65,27 @@ func (r *ReqParam)SendGetRequest() ([]byte, error) {
     return data, err
 }
 
-// 发送get请求(https 不验证服务器端证书 client模式 不带cookie)
-func (r *ReqParam)SendHttpsGetRequestSkipVerify() ([]byte, error) {
+// SendHTTPSGetRequestSkipVerify 发送get请求(https 不验证服务器端证书 client模式 不带cookie)
+func (r *ReqParam)SendHTTPSGetRequestSkipVerify() ([]byte, error) {
     var data []byte
     var err error
     // 完整的请求地址
-    r.Fulladdr, err = GetFullUrl(r.Addr, r.Param)
+    r.Fulladdr, err = GetFullURL(r.Addr, r.Param)
     if nil != err {
         log.Println(err)
         return data, err
     }
     // 发送请求
-    data, err = doSendGetHttpsSkipVerify(r.Fulladdr)
+    data, err = doSendGetHTTPSSkipVerify(r.Fulladdr)
     return data, err
 }
 
-// 发送post请求(非client模式 不带cookie)
+// SendPostRequest 发送post请求(非client模式 不带cookie)
 func (r *ReqParam)SendPostRequest() ([]byte, error) {
     var data []byte
     var err error
     // 完整的请求地址
-    r.Fulladdr, err = GetFullUrl(r.Addr, r.Param)
+    r.Fulladdr, err = GetFullURL(r.Addr, r.Param)
     if nil != err {
         log.Println(err)
         return data, err
@@ -97,12 +97,12 @@ func (r *ReqParam)SendPostRequest() ([]byte, error) {
     return data, err
 }
 
-// 发送post请求(https 不验证服务器端证书 client模式 不带cookie)
-func (r *ReqParam)SendHttpsPostRequestSkipVerify() ([]byte, error) {
+// SendHTTPSPostRequestSkipVerify 发送post请求(https 不验证服务器端证书 client模式 不带cookie)
+func (r *ReqParam)SendHTTPSPostRequestSkipVerify() ([]byte, error) {
     var data []byte
     var err error
     // 完整的请求地址
-    r.Fulladdr, err = GetFullUrl(r.Addr, r.Param)
+    r.Fulladdr, err = GetFullURL(r.Addr, r.Param)
     if nil != err {
         log.Println(err)
         return data, err
@@ -110,7 +110,7 @@ func (r *ReqParam)SendHttpsPostRequestSkipVerify() ([]byte, error) {
     // 拼请求body参数
     r.setRequestBody2()
     // 发送请求
-    data, err = doSendPostHttpsSkipVerify(r.Body2, r.ContentType, r.Fulladdr)
+    data, err = doSendPostHTTPSSkipVerify(r.Body2, r.ContentType, r.Fulladdr)
     return data, err
 }
 
@@ -188,7 +188,7 @@ func doSendGet2(apiurl string, header http.Header) ([]byte, error) {
 
 // 发送get请求https地址 不验证服务器端程序 
 // apiurl 完整的请求地址
-func doSendGetHttpsSkipVerify(apiurl string) ([]byte, error) {
+func doSendGetHTTPSSkipVerify(apiurl string) ([]byte, error) {
     var rtn []byte
     // 指定不验证服务器端证书
     tr := &http.Transport{
@@ -272,7 +272,7 @@ func doSendPost2(p, contentType, apiurl string, header http.Header) ([]byte, err
 
 // 发送post请求https地址 不验证服务器端程序 
 // p post请求body中的参数  apiurl 完整的请求地址
-func doSendPostHttpsSkipVerify(p, contentType, apiurl string) ([]byte, error) {
+func doSendPostHTTPSSkipVerify(p, contentType, apiurl string) ([]byte, error) {
     var rtn []byte
     // 指定不验证服务器端证书
     tr := &http.Transport{
@@ -296,8 +296,8 @@ func doSendPostHttpsSkipVerify(p, contentType, apiurl string) ([]byte, error) {
     return rtn, nil
 }
 
-// 生成带参数的完整链接
-func GetFullUrl(addr string, params url.Values) (string, error) {
+// GetFullURL 生成带参数的完整链接
+func GetFullURL(addr string, params url.Values) (string, error) {
     // 解析链接地址
     u, err := url.Parse(addr)
     if nil != err {

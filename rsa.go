@@ -10,7 +10,7 @@ import (
     "log"
 )
 
-// RSA加密
+// RSAEncrypt RSA加密
 func RSAEncrypt(keypath string, msg []byte) ([]byte, error) {
     var encryptedMsg []byte
     // 读取公钥(加密密钥)
@@ -50,7 +50,7 @@ func RSAEncrypt(keypath string, msg []byte) ([]byte, error) {
     return encryptedMsg, err
 }
 
-// RSA解密
+// RSADecrypt RSA解密
 func RSADecrypt(keypath string, msg []byte) ([]byte, error) {
     var decryptedMsg []byte
     // 读取私钥(解密密钥)
