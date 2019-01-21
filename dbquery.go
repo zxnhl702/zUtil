@@ -148,12 +148,16 @@ func GetMultyRowsDataWithWhere(sqlCmd string, valstr string, db *sql.DB) ([]*map
                 rowData[col] = vv
             case bool:
                 // 布尔型 直接放到map中
-                // log.Println("float64",  columns[i], col, vv)
+                // log.Println("bool",  columns[i], col, vv)
                 rowData[col] = vv
             case time.Time:
                 // 时间类型 转换成string 放到map中
                 // log.Println("time", columns[i], col, vv.Format("2006-01-02 15:04:05"))
                 rowData[col] = vv.Format("2006-01-02 15:04:05")
+            case string:
+                // 时间类型 直接放到map中
+                // log.Println("string", columns[i], col, vv)
+                rowData[col] = vv
             default:
                 // 默认 先断言[]byte然后转换成string 放倒map中
                 vvv, _ :=  v.([]byte)
