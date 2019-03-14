@@ -11,7 +11,7 @@ import (
 )
 
 // 请求参数数据全部转换成pongo2的数据类型
-func (q QueryParam)toPongoContext() *pongo2.Context {
+func (q QueryParam)ToPongoContext() *pongo2.Context {
     // 检索参数格式转换
     p2 := make(pongo2.Context)
     for k, v := range q {
