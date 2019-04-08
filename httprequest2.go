@@ -40,6 +40,13 @@ func NewReqParam2() *ReqParam2 {
     }
 }
 
+// NewReqParam2II 新建请求结构体 带请求地址
+func NewReqParam2II(addr string) *ReqParam2 {
+    req := NewReqParam2()
+    req.Addr = addr
+    return req
+}
+
 // ============================
 // GET请求
 // ============================
