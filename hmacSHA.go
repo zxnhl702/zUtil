@@ -28,7 +28,7 @@ func NewHMacSHA256(msg, key string) *HMacSHA256 {
 }
 
 // 获取hmacsha256计算后的签名
-func (v *HMacSHA256)getHMacSHA256() string {
+func (v *HMacSHA256)GetHMacSHA256() string {
     // 新建hmac哈希 使用sha256算法
     h := hmac.New(sha256.New, v.Key)
     // 需要计算的消息写入哈希中
@@ -39,7 +39,7 @@ func (v *HMacSHA256)getHMacSHA256() string {
 }
 
 // 获取hmacsha256计算后的签名并用base64编码
-func (v *HMacSHA256)getHMacSHA256Base64Encoded() string {
+func (v *HMacSHA256)GetHMacSHA256Base64Encoded() string {
     // 先计算hmacsha256计算后的签名
     sha := v.getHMacSHA256()
     // base64编码
