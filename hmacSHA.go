@@ -41,7 +41,7 @@ func (v *HMacSHA256)GetHMacSHA256() string {
 // 获取hmacsha256计算后的签名并用base64编码
 func (v *HMacSHA256)GetHMacSHA256Base64Encoded() string {
     // 先计算hmacsha256计算后的签名
-    sha := v.getHMacSHA256()
+    sha := v.GetHMacSHA256()
     // base64编码
     return base64.StdEncoding.EncodeToString([]byte(sha))
 }
