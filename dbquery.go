@@ -189,6 +189,25 @@ func ExecSQL(sqls string, db *sql.DB) (int64, error) {
     return rowid, err
 }
 
+// ExecSQLTx 执行sql insert update delete 在事务中
+func ExecSQLTx(sqls string, tx *sql.Tx) (int64, error) {
+    var rowid int64
+    var err error
+    result, err := tx.Exec(sqls)
+    if nil != err {
+        log.Println(err)
+        return rowid, err
+    }
+    if strings.Index(sqls, "insert") >= 0 {
+        // insert
+        rowid, err = result.LastInsertId()
+    } else { 
+        // update or detete
+        rowid, err = result.RowsAffected()
+    }
+    return rowid, err
+}
+
 // ExecSQLWithWhere 执行sql insert update delete 带where条件
 func ExecSQLWithWhere(sqls, valstr string, db *sql.DB) (int64, error) {
     // sql where 条件
@@ -198,6 +217,29 @@ func ExecSQLWithWhere(sqls, valstr string, db *sql.DB) (int64, error) {
     var rowid int64
     var err error
     result, err := db.Exec(sqls, vals...)
+    if nil != err {
+        log.Println(err)
+        return rowid, err
+    }
+    if strings.Index(sqls, "insert") >= 0 {
+        // insert
+        rowid, err = result.LastInsertId()
+    } else { 
+        // update or detete
+        rowid, err = result.RowsAffected()
+    }
+    return rowid, err
+}
+
+// ExecSQLWithWhereTx 执行sql insert update delete 带where条件 在事务中
+func ExecSQLWithWhereTx(sqls, valstr string, tx *sql.Tx) (int64, error) {
+    // sql where 条件
+    vals := make([]interface{}, 20)
+    json.Unmarshal([]byte(valstr), &vals)
+
+    var rowid int64
+    var err error
+    result, err := tx.Exec(sqls, vals...)
     if nil != err {
         log.Println(err)
         return rowid, err
