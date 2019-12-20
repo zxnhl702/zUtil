@@ -10,18 +10,30 @@ import (
     "log"
 )
 
+// 读取RSA密钥文件
+//   keypath 密钥文件的路径
+func ReadRSAKeyFile(keypath string) (*pem.Block, error) {
+    // 读取密钥文件
+    keyfile, err := ioutil.ReadFile(keypath)
+    if nil != err {
+        log.Println(err)
+        return nil, err
+    }
+    // pem格式的密钥解码
+    block, _ := pem.Decode(keyfile)
+    if nil == block {
+        return nil, err
+    }
+    return block, nil
+}
+
 // RSAEncrypt RSA加密
 func RSAEncrypt(keypath string, msg []byte) ([]byte, error) {
     var encryptedMsg []byte
     // 读取公钥(加密密钥)
-    pk, err := ioutil.ReadFile(keypath)
+    block, err := ReadRSAKeyFile(keypath)
     if nil != err {
         log.Println(err)
-        return encryptedMsg, err
-    }
-    // pem格式的公钥解码
-    block, _ := pem.Decode(pk)
-    if nil == block {
         return encryptedMsg, err
     }
     // 生成加密密钥
@@ -54,14 +66,9 @@ func RSAEncrypt(keypath string, msg []byte) ([]byte, error) {
 func RSADecrypt(keypath string, msg []byte) ([]byte, error) {
     var decryptedMsg []byte
     // 读取私钥(解密密钥)
-    sk, err := ioutil.ReadFile(keypath)
+    block, err := ReadRSAKeyFile(keypath)
     if nil != err {
         log.Println(err)
-        return decryptedMsg, err
-    }
-    // pem格式的私钥解码
-    block, _ := pem.Decode(sk)
-    if nil == block {
         return decryptedMsg, err
     }
     // 生成解密密钥
