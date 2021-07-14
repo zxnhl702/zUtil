@@ -1,14 +1,14 @@
 package zUtil
 
 import (
-    "bytes"
-    "crypto"
-    "crypto/rand"
-    "crypto/rsa"
-    "crypto/x509"
-    "encoding/pem"
-    "io/ioutil"
-    "log"
+	"bytes"
+	"crypto"
+	"crypto/rand"
+	"crypto/rsa"
+	"crypto/x509"
+	"encoding/pem"
+	"io/ioutil"
+	"log"
 )
 
 // 读取RSA密钥文件
@@ -211,7 +211,7 @@ func splitMsg(msg []byte, limit int) [][]byte {
         chunks = append(chunks, chunk)
     }
     if(len(msg) > 0) {
-        chunks = append(chunks, msg[:len(msg)])
+        chunks = append(chunks, msg[:])
     }
     return chunks
 }

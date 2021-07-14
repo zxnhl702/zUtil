@@ -2,21 +2,21 @@
 package zUtil
 
 import (
-    "bytes"
-    "crypto/md5"
-    crand "crypto/rand"
-    "database/sql"
-    "encoding/base64"
-    "encoding/hex"
-    "encoding/json"
-    "encoding/xml"
-    "io"
-    "log"
-    "math/rand"
-    "net/http"
-    "net/url"
-    "os"
-    "time"
+	"bytes"
+	"crypto/md5"
+	crand "crypto/rand"
+	"database/sql"
+	"encoding/base64"
+	"encoding/hex"
+	"encoding/json"
+	"encoding/xml"
+	"io"
+	"log"
+	"math/rand"
+	"net/http"
+	"net/url"
+	"os"
+	"time"
 )
 
 // Ret 标准返回数据的结构体
@@ -151,7 +151,7 @@ const (
 )
 // RandomString 产生随机字符串
 func RandomString(size int, kind int) []byte {
-    ikind, kinds, result := kind, [][]int{[]int{10, 48}, []int{26, 97}, []int{26, 65}}, make([]byte, size)
+    ikind, kinds, result := kind, [][]int{{10, 48}, {26, 97}, {26, 65}}, make([]byte, size)
     isALL := kind > 2 || kind < 0
     rand.Seed(time.Now().UnixNano())
     for i :=0; i < size; i++ {
