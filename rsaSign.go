@@ -2,14 +2,14 @@
 package zUtil
 
 import (
-    "crypto"
-    "crypto/md5"
-    "crypto/rand"
-    "crypto/rsa"
-    "crypto/sha1"
-    "crypto/sha256"
-    "encoding/base64"
-    "log"
+	"crypto"
+	"crypto/md5"
+	"crypto/rand"
+	"crypto/rsa"
+	"crypto/sha1"
+	"crypto/sha256"
+	"encoding/base64"
+	"log"
 )
 
 // RSA签名对象
@@ -87,4 +87,64 @@ func (a *RSASign)SignSHA256withRSA(msg []byte) (string, error) {
     // base64编码
     signBase64 = base64.URLEncoding.EncodeToString(signBytes)
     return signBase64, nil
+}
+
+// RSA验签对象
+type RSAVerifySign struct {
+    Pub         *rsa.PublicKey      // RSA公钥对象
+}
+
+// 通过私钥对象新建RSA验签对象
+func NewRSAVerifySignWithPublishKey(pk *rsa.PublicKey) *RSAVerifySign {
+    return &RSAVerifySign{Pub : pk}
+}
+
+// 通过PKCS1格式私钥文件路径新建RSA验签对象
+func NewRSAVerifySignWithPKFilepath(pkFilePath string) (*RSAVerifySign, error) {
+    // 生成RSA公钥
+    pk, _, err := GetRSAPublicKey(pkFilePath)
+    // 调用通过私钥对象生成RSA签名对象的函数
+    return NewRSAVerifySignWithPublishKey(pk), err
+}
+
+// VerifySignMD5withRSA 使用RSA公钥验签 MD5摘要
+// msg 待签名的原始数据
+// sign 签名
+func (a *RSAVerifySign)VerifySignMD5withRSA(msg, sign []byte) error {
+    // 计算消息hash值 MD5算法
+    hashData := md5.Sum(msg)
+    // 使用RSA公钥验签
+    err := rsa.VerifyPKCS1v15(a.Pub, crypto.MD5, hashData[ : ], sign)
+    if nil != err {
+        log.Printf("验签失败, 错误信息:%v", err)
+    }
+    return err
+}
+
+// VerifySignMD5withRSA 使用RSA公钥验签 SHA1摘要
+// msg 待签名的原始数据
+// sign 签名
+func (a *RSAVerifySign)VerifySignSHA1withRSA(msg, sign []byte) error {
+    // 计算消息hash值 MD5算法
+    hashData := sha1.Sum(msg)
+    // 使用RSA公钥验签
+    err := rsa.VerifyPKCS1v15(a.Pub, crypto.SHA1, hashData[ : ], sign)
+    if nil != err {
+        log.Printf("验签失败, 错误信息:%v", err)
+    }
+    return err
+}
+
+// VerifySignMD5withRSA 使用RSA公钥验签 SHA256摘要
+// msg 待签名的原始数据
+// sign 签名
+func (a *RSAVerifySign)VerifySignSHA256withRSA(msg, sign []byte) error {
+    // 计算消息hash值 MD5算法
+    hashData := md5.Sum(msg)
+    // 使用RSA公钥验签
+    err := rsa.VerifyPKCS1v15(a.Pub, crypto.SHA256, hashData[ : ], sign)
+    if nil != err {
+        log.Printf("验签失败, 错误信息:%v", err)
+    }
+    return err
 }
