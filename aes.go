@@ -3,22 +3,23 @@
 package zUtil
 
 import (
-    "bytes"
-    "crypto/aes"
-    "crypto/cipher"
-    "encoding/base64"
-    "encoding/hex"
-    "log"
+	"bytes"
+	"crypto/aes"
+	"crypto/cipher"
+	"encoding/base64"
+	"encoding/hex"
+	"log"
 )
 
 // AES加密
 type AES struct {
     Key             []byte  // 密钥
+    IV              []byte  // 偏移量
 }
 
 // 新建 AES加密对象
-func NewAES(key string) *AES {
-    return &AES{Key : []byte(key)}
+func NewAES(key, iv string) *AES {
+    return &AES{Key : []byte(key), IV: []byte(iv)}
 }
 
 // 填充数据
@@ -42,7 +43,7 @@ func (r *AES)AESEncryptCBC(src []byte) ([]byte, error) {
         return nil, err
     }
     src = padding(src, block.BlockSize())
-    blockMode := cipher.NewCBCEncrypter(block, r.Key)
+    blockMode := cipher.NewCBCEncrypter(block, r.IV)
     blockMode.CryptBlocks(src, src)
     return src, nil
 }
@@ -53,7 +54,7 @@ func (r *AES)AESDecryptCBC(src []byte) ([]byte, error) {
     if err != nil {
         return nil, err
     }
-    blockMode := cipher.NewCBCDecrypter(block, r.Key)
+    blockMode := cipher.NewCBCDecrypter(block, r.IV)
     blockMode.CryptBlocks(src, src)
     src = unpadding(src)
     return src, nil
