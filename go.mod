@@ -1,4 +1,4 @@
-module zUtil
+module github.com/zxnhl702/zUtil
 
 go 1.18
 
